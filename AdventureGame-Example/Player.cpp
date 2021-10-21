@@ -7,7 +7,7 @@ Player::Player(std::string newName, std::string newDescription)
 	, maxHealth		(100)
 	, currentHealth	(100)
 	, attack		(10)
-	, currentArea	("")
+	, currentArea	(nullptr)
 {
 }
 

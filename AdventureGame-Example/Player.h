@@ -2,6 +2,9 @@
 
 #include <string>
 
+// Forward declaration for Area
+class Area;
+
 class Player
 {
 
@@ -20,6 +23,6 @@ public:
 	int currentHealth;
 	int maxHealth;
 	int attack;
-	std::string currentArea;
+	Area* currentArea;
 };
 
