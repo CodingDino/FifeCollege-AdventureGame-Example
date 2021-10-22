@@ -1,10 +1,11 @@
 #pragma once
 
 #include <string>
+#include "Creature.h"
 
 class Player;
 
-class Monster
+class Monster : public Creature
 {
 
 public:
@@ -14,20 +15,7 @@ public:
 	~Monster();
 
 	// Actions
-	void Look();
 	void Attack(Player* thePlayer);
 
-	// Getter
-	std::string GetName();
-	bool GetAlive();
-
-private:
-
-	// Data
-	std::string name;
-	std::string description;
-	int currentHealth;
-	int maxHealth;
-	int attack;
 };
 

@@ -2,12 +2,13 @@
 
 #include <string>
 #include <vector>
+#include "Thing.h"
 
 // Forward declaration for Player
 class Player;
 class Monster;
 
-class Area
+class Area : public Thing
 {
 public:
 
@@ -25,14 +26,9 @@ public:
 	void AddExit(Area* exitToAdd);
 	void AddMonster(Monster* monsterToAdd);
 
-	// Getters
-	std::string GetName();
-
 private:
 
 	// Data
-	std::string name;
-	std::string description;
 	std::vector<Area*> exits;
 	std::vector<Monster*> monsters;
 };

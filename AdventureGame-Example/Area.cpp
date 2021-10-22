@@ -5,9 +5,8 @@
 #include "Monster.h"
 
 Area::Area(std::string newName, std::string newDescription)
-	: name			(newName)
-	, description	(newDescription)
-	, exits			()
+	: Thing		(newName, newDescription)
+	, exits		()
 {
 }
 
@@ -17,8 +16,9 @@ Area::~Area()
 
 void Area::Look()
 {
-	std::cout << "You look around at the " << name << "." << std::endl;
-	std::cout << description << std::endl;
+	// Call base class
+	Thing::Look();
+
 	for (int i = 0; i < monsters.size(); ++i)
 	{
 		std::cout << "There is a ";
@@ -30,7 +30,7 @@ void Area::Look()
 	std::cout << "Exits:" << std::endl;
 	for (int i = 0; i < exits.size(); ++i)
 	{
-		std::cout << "     " << exits[i]->name << std::endl;
+		std::cout << "     " << exits[i]->GetName() << std::endl;
 	}
 	std::cout << std::endl;
 }
@@ -57,7 +57,7 @@ void Area::Go(Player* thePlayer, std::string target)
 {
 	for (int i = 0; i < exits.size(); ++i)
 	{
-		if (target == exits[i]->name)
+		if (target == exits[i]->GetName())
 		{
 			std::cout << "You go to " << target << std::endl << std::endl;
 			thePlayer->SetCurrentArea(exits[i]);
@@ -82,11 +82,6 @@ void Area::AttackContents(std::string target, Player* thePlayer)
 	// Couldn't find a target in this room.
 	std::cout << "Sorry, I didn't understand the target \"" << target << "\"" << std::endl;
 	std::cout << "Try looking at the area around you to see what targets you might find!" << std::endl << std::endl;
-}
-
-std::string Area::GetName()
-{
-	return name;
 }
 
 void Area::AddExit(Area* exitToAdd)
