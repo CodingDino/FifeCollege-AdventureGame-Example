@@ -22,3 +22,28 @@ void Player::Look()
 	std::cout << "Heath: " << currentHealth << "/" << maxHealth << std::endl;
 	std::cout << "Attack: " << attack << std::endl << std::endl;
 }
+
+void Player::DealDamage(int damageToDeal)
+{
+	currentHealth -= damageToDeal;
+}
+
+Area* Player::GetCurrentArea()
+{
+	return currentArea;
+}
+
+int Player::GetAttack()
+{
+	return attack;
+}
+
+bool Player::GetAlive()
+{
+	return currentHealth > 0;
+}
+
+void Player::SetCurrentArea(Area* newCurrentArea)
+{
+	currentArea = newCurrentArea;
+}
