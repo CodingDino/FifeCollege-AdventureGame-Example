@@ -13,7 +13,7 @@ public:
 
 	// Constructors/Destructors
 	Player(std::string newName, std::string newDescription);
-	~Player();
+	virtual ~Player();
 
 	// Getters
 	Area* GetCurrentArea();

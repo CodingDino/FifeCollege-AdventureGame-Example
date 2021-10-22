@@ -9,7 +9,7 @@ public:
 
 	// Constructors/Destructors
 	Creature(std::string newName, std::string newDescription, int newHealth, int newAttack);
-	~Creature();
+	virtual ~Creature();
 
 	// Actions
 	virtual void Look();

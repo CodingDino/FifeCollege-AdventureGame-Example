@@ -9,7 +9,7 @@ public:
 
 	// Constructors/Destructors
 	Thing(std::string newName, std::string newDescription);
-	~Thing();
+	virtual ~Thing();
 
 	// Actions
 	virtual void Look();

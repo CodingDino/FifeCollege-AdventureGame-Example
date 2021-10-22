@@ -14,7 +14,7 @@ public:
 
 	// Constructors/Destructors
 	Area(std::string newName, std::string newDescription);
-	~Area();
+	virtual ~Area();
 
 	// Actions
 	void Look();
