@@ -4,9 +4,10 @@
 #include <vector>
 #include "Thing.h"
 
-// Forward declaration for Player
+// Forward declarations
 class Player;
 class Monster;
+class Item;
 
 class Area : public Thing
 {
@@ -18,18 +19,22 @@ public:
 
 	// Actions
 	void Look();
-	void LookAtContents(std::string target);
 	void Go(Player* thePlayer, std::string target);
-	void AttackContents(std::string target, Player* thePlayer);
 
 	// Setup
 	void AddExit(Area* exitToAdd);
 	void AddMonster(Monster* monsterToAdd);
+	void AddItem(Item* itemToAdd);
+	void RemoveItem(Item* itemToRemove);
+
+	// Getters
+	Thing* GetFromContents(std::string target);
 
 private:
 
 	// Data
 	std::vector<Area*> exits;
 	std::vector<Monster*> monsters;
+	std::vector<Item*> items;
 };
 

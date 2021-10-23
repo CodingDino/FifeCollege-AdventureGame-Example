@@ -5,6 +5,8 @@
 #include "Player.h"
 #include "Area.h"
 #include "Monster.h"
+#include "Item.h"
+#include "Potion.h"
 
 int main()
 {
@@ -45,6 +47,15 @@ int main()
     hallway.AddMonster(&goblin);
     throneroom.AddMonster(&goblinKing);
 
+    // Create items
+    Item pebble("Pebble", "A useless pebble");
+    Potion smallPotion("Potion", "A bubbling red potion. It smells delicious.", 50);
+    Potion healingCrystal("Crystal", "A shining crystal the size of your fist that gives off a warm healing feeling.", 100);
+
+    entrance.AddItem(&pebble);
+    hallway.AddItem(&smallPotion);
+    chamber.AddItem(&healingCrystal);
+
     // Create the player
     std::cout << "Please name your character: " << std::endl;
     std::string playerName;
@@ -78,18 +89,21 @@ int main()
 
             std::cin >> choice;
 
-            if (choice == "area")
+            // Check player and the area for the target
+            Thing* targetPlayerThing = myPlayer.GetFromContents(choice);
+            Thing* targetAreaThing = myPlayer.GetCurrentArea()->GetFromContents(choice);
+            if (targetPlayerThing != nullptr)
             {
-                // Go to our current area and Look at it!
-                myPlayer.GetCurrentArea()->Look();
+                targetPlayerThing->Look();
             }
-            else if (choice == "self")
+            else if (targetAreaThing != nullptr)
             {
-                myPlayer.Look();
+                targetAreaThing->Look();
             }
             else
             {
-                myPlayer.GetCurrentArea()->LookAtContents(choice);
+                std::cout << "Sorry, I didn't understand the target \"" << choice << "\"" << std::endl;
+                std::cout << "Try looking at the area around you, yourself, or a specific item, feature, or monster!" << std::endl << std::endl;
             }
         }
         else if (choice == "go")
@@ -106,7 +120,49 @@ int main()
             std::cout << "What do you want to attack?" << std::endl << std::endl;
 
             std::cin >> choice;
-            myPlayer.GetCurrentArea()->AttackContents(choice, &myPlayer);
+
+            Thing* targetThing = myPlayer.GetCurrentArea()->GetFromContents(choice);
+            Monster* targetMonster = dynamic_cast<Monster*>(targetThing);
+            if (targetThing != nullptr && targetMonster == nullptr)
+            {
+                std::cout << "You can't attack \"" << choice << "\" - " << std::endl;
+                std::cout << "Heroes can only attack monsters!" << std::endl << std::endl;
+            }
+            else if (targetMonster != nullptr)
+            {
+                targetMonster->Attack(&myPlayer);
+            }
+            else
+            {
+                std::cout << "Sorry, I didn't understand the target \"" << choice << "\"" << std::endl;
+                std::cout << "Try looking at the area around you to see what targets you might find!" << std::endl << std::endl;
+            }
+        }
+        else if (choice == "take")
+        {
+            std::cout << "What do you want to take?" << std::endl << std::endl;
+            std::cin >> choice;
+
+            Thing* targetThing = myPlayer.GetCurrentArea()->GetFromContents(choice);
+            Item* targetItem = dynamic_cast<Item*>(targetThing);
+            if (targetItem != nullptr)
+            {
+                myPlayer.AddItem(targetItem);
+                myPlayer.GetCurrentArea()->RemoveItem(targetItem);
+                std::cout << "You take the " << choice << "." << std::endl << std::endl;
+            }
+            else
+            {
+                std::cout << "Sorry, I didn't understand the target \"" << choice << "\"" << std::endl;
+                std::cout << "Try looking at the area around you to see what items you might find!" << std::endl << std::endl;
+            }
+        }
+        else if (choice == "use")
+        {
+            std::cout << "What do you want to use?" << std::endl << std::endl;
+
+            std::cin >> choice;
+            myPlayer.UseItemFromInventory(choice);
         }
         else if (choice == "exit")
         {
@@ -121,6 +177,8 @@ int main()
             std::cout << "     look" << std::endl;
             std::cout << "     go" << std::endl;
             std::cout << "     attack" << std::endl;
+            std::cout << "     take" << std::endl;
+            std::cout << "     use" << std::endl;
             std::cout << "     exit" << std::endl;
             std::cout << "     help" << std::endl;
 

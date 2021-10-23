@@ -18,6 +18,7 @@ public:
 	bool GetAlive();
 	int GetAttack();
 	void DealDamage(int damageToDeal);
+	void Heal(int healthToHeal);
 
 private:
 

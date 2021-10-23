@@ -43,3 +43,12 @@ void Creature::DealDamage(int damageToDeal)
 {
 	currentHealth -= damageToDeal;
 }
+
+void Creature::Heal(int healthToHeal)
+{
+	currentHealth += healthToHeal;
+	if (currentHealth > maxHealth)
+	{
+		currentHealth = maxHealth;
+	}
+}
