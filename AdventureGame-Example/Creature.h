@@ -20,7 +20,7 @@ public:
 	void DealDamage(int damageToDeal);
 	void Heal(int healthToHeal);
 
-private:
+protected:
 
 	// Data
 	int currentHealth;

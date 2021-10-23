@@ -2,11 +2,15 @@
 #include <iostream>
 #include "Item.h"
 #include "Area.h"
+#include "Armor.h"
+#include "Weapon.h"
 
 Player::Player(std::string newName, std::string newDescription)
-	: Creature		(newName, newDescription, 100, 10)
-	, currentArea	(nullptr)
-	, items			()
+	: Creature			(newName, newDescription, 100, 10)
+	, currentArea		(nullptr)
+	, items				()
+	, equippedWeapon	(nullptr)
+	, equippedArmor		(nullptr)
 {
 }
 
@@ -40,7 +44,6 @@ void Player::UseItemFromInventory(std::string target)
 	{
 		if (target == items[i]->GetName())
 		{
-			// TODO
 			std::string choice;
 
 			std::cout << "Use " << target << " on what?" << std::endl << std::endl;
@@ -73,6 +76,61 @@ void Player::UseItemFromInventory(std::string target)
 	// Couldn't find a target in inventory
 	std::cout << "Sorry, you dont seem to have a \"" << target << "\" to use." << std::endl;
 	std::cout << "Try looking at \"self\" to see your inventory, or \"take\" an item from the area around you if you don't have one." << std::endl << std::endl;
+}
+
+void Player::Equip(std::string target)
+{
+	for (int i = 0; i < items.size(); ++i)
+	{
+		if (target == items[i]->GetName())
+		{
+			Weapon* targetWeapon = dynamic_cast<Weapon*>(items[i]);
+			Armor* targetArmor = dynamic_cast<Armor*>(items[i]);
+			if (targetWeapon != nullptr)
+			{
+				// put on weapon
+
+				// Remove existing weapon bonus if present
+				if (equippedWeapon != nullptr)
+				{
+					attack -= targetWeapon->GetAttackValue();
+				}
+				equippedWeapon = targetWeapon;
+				attack += targetWeapon->GetAttackValue();
+				std::cout << "You weild the \"" << target << "\" in both hands and feel much stronger." << std::endl;
+				std::cout << "Your attack is now " << targetWeapon->GetAttackValue() << " higher!" << std::endl << std::endl;
+			}
+			else if (targetArmor != nullptr)
+			{
+				// put on armor
+
+				// Remove existing weapon bonus if present
+				if (equippedArmor != nullptr)
+				{
+					maxHealth -= targetArmor->GetArmorValue();
+					currentHealth -= targetArmor->GetArmorValue();
+				}
+				equippedArmor = targetArmor;
+				maxHealth += targetArmor->GetArmorValue();
+				currentHealth += targetArmor->GetArmorValue();
+				std::cout << "You put on the \"" << target << "\" and feel much safer." << std::endl;
+				std::cout << "Your health is now " << targetArmor->GetArmorValue() << " higher!" << std::endl << std::endl;
+			}
+			else
+			{
+				// The target item was not a valid target.
+				std::cout << "Sorry, you can't equip the item \"" << target << "\"." << std::endl;
+				std::cout << "Try using it instead." << std::endl << std::endl;
+			}
+
+			return;
+		}
+	}
+
+	// Couldn't find a target in inventory
+	std::cout << "Sorry, you dont seem to have a \"" << target << "\" to equip." << std::endl;
+	std::cout << "Try looking at \"self\" to see your inventory, or \"take\" equipment from the area around you if you don't have any." << std::endl << std::endl;
+
 }
 
 void Player::AddItem(Item* itemToAdd)

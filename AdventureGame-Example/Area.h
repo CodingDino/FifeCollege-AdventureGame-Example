@@ -8,6 +8,7 @@
 class Player;
 class Monster;
 class Item;
+class Feature;
 
 class Area : public Thing
 {
@@ -26,6 +27,7 @@ public:
 	void AddMonster(Monster* monsterToAdd);
 	void AddItem(Item* itemToAdd);
 	void RemoveItem(Item* itemToRemove);
+	void AddFeature(Feature* featureToAdd);
 
 	// Getters
 	Thing* GetFromContents(std::string target);
@@ -36,5 +38,6 @@ private:
 	std::vector<Area*> exits;
 	std::vector<Monster*> monsters;
 	std::vector<Item*> items;
+	std::vector<Feature*> features;
 };
 

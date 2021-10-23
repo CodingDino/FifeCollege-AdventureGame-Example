@@ -7,6 +7,8 @@
 // Forward declarations
 class Area;
 class Item;
+class Weapon;
+class Armor;
 
 class Player : public Creature
 {
@@ -20,6 +22,7 @@ public:
 	// Actions
 	void Look();
 	void UseItemFromInventory(std::string target);
+	void Equip(std::string target);
 
 	// Setup
 	void AddItem(Item* itemToAdd);
@@ -36,5 +39,7 @@ private:
 	// Data
 	Area* currentArea;
 	std::vector<Item*> items;
+	Weapon* equippedWeapon;
+	Armor* equippedArmor;
 };
 

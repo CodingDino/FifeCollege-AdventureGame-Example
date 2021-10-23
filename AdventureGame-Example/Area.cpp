@@ -4,12 +4,14 @@
 #include "Player.h"
 #include "Monster.h"
 #include "Item.h"
+#include "Feature.h"
 
 Area::Area(std::string newName, std::string newDescription)
 	: Thing		(newName, newDescription)
 	, exits		()
 	, monsters	()
 	, items		()
+	, features	()
 {
 }
 
@@ -85,6 +87,11 @@ void Area::RemoveItem(Item* itemToRemove)
 	}
 }
 
+void Area::AddFeature(Feature* featureToAdd)
+{
+	features.push_back(featureToAdd);
+}
+
 Thing* Area::GetFromContents(std::string target)
 {
 	if (target == GetName() || target == "area")
@@ -101,6 +108,13 @@ Thing* Area::GetFromContents(std::string target)
 		if (target == items[i]->GetName())
 		{
 			return items[i];
+		}
+	}
+	for (int i = 0; i < features.size(); ++i)
+	{
+		if (target == features[i]->GetName())
+		{
+			return features[i];
 		}
 	}
 	return nullptr;

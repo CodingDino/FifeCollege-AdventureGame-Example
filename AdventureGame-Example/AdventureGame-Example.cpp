@@ -7,6 +7,11 @@
 #include "Monster.h"
 #include "Item.h"
 #include "Potion.h"
+#include "Key.h"
+#include "Feature.h"
+#include "Lock.h"
+#include "Weapon.h"
+#include "Armor.h"
 
 int main()
 {
@@ -20,21 +25,20 @@ int main()
     std::cout << "Generating the word..." << std::endl;
     
     // Setup each area
-    Area entrance("Entrance", "A grand entryway with soaring columns. You see a Hallway ahead.");
-    Area hallway("Hallway", "A long, featureless hallway leading into darkness. The Throneroom is ahead.");
-    Area throneroom("Throneroom", "A huge throneroom shrouded in darkness. A grim purple crystal throne lies empty at the center on an obsidian dais. Tattered red curtains hang on the walls, covering a strange Crack in the wall. Behind you is the Hallway. Above you is the Belfry");
-    Area crack("Crack", "A small crack that you can barely squeeze through. It travels between the Throneroom and the Chamber.");
-    Area chamber("Chamber", "This room is covered in strange, soft eggs. They are sticky as if covered in web. A Crack leads out.");
-    Area belfry("Belfry", "This Belfry is full of bats. Lots and lots of bats. Bats in the Belfry. Below you is the Throneroom.");
+    Area entrance("Entrance", "A grand entryway with soaring Columns. You see a Hallway ahead.");
+    Area hallway("Hallway", "A long, featureless hallway leading into darkness. A large door at the end of the wall has an ornate Lock on it. A large Crack in the wall leads to darkness.");
+    Area throneroom("Throneroom", "A huge throneroom shrouded in darkness. A grim purple crystal Throne lies at the center on an obsidian Dais. Tattered red Curtains hang on the walls. Behind you is the Hallway. Above you is the Belfry");
+    Area crack("Crack", "A small crack that you can barely squeeze through. It travels between the Hallway and the Chamber.");
+    Area chamber("Chamber", "This room is covered in strange, soft Eggs. They are sticky as if covered in web. A Crack leads out.");
+    Area belfry("Belfry", "This Belfry is full of Bats. Lots and lots of Bats. Bats in the Belfry. Below you is the Throneroom.");
 
     // Setup exits for each area
     entrance.AddExit(&hallway);
     hallway.AddExit(&entrance);
-    hallway.AddExit(&throneroom);
+    hallway.AddExit(&crack);
     throneroom.AddExit(&hallway);
-    throneroom.AddExit(&crack);
     throneroom.AddExit(&belfry);
-    crack.AddExit(&throneroom);
+    crack.AddExit(&hallway);
     crack.AddExit(&chamber);
     chamber.AddExit(&crack);
     belfry.AddExit(&throneroom);
@@ -46,15 +50,39 @@ int main()
 
     hallway.AddMonster(&goblin);
     throneroom.AddMonster(&goblinKing);
+    chamber.AddMonster(&spider);
+
+    // Create Features
+    Lock ornateLock("Lock", "A fancy and ornate golden lock. It needs an equally ornate key.", &hallway, &throneroom);
+    Feature columns("Columns", "These soaring columns are made of marble, and contain carvings. On closer inspection, the carvings are all rude cartoons of goblins.");
+    Feature throne("Throne", "The throne is made of purple crystal, and shines earily in the dim light. It gives off a sense of forboding.");
+    Feature dais("Dais", "The dais is low and made of a dark obsidian, shiny like glass. It looks slippery.");
+    Feature curtains("Curtains", "The red curtains are in tatters - someone really should replace them. They are dusty too, and full of cobwebs - gross.");
+    Feature eggs("Eggs", "The eggs are sticky and webby. They are warm to the touch and soft. You feel small movements in side of them, and a tiny chittering sound emenates from them. They give you the willies.");
+    Feature bats("Bats", "There are bats here. Lots of them. They squeek, hang upsideown, flutter around, and are generally very cute. If you don't like them, too bad. This is their home, man - don't be rude.");
+
+    hallway.AddFeature(&ornateLock);
+    entrance.AddFeature(&columns);
+    throneroom.AddFeature(&throne);
+    throneroom.AddFeature(&dais);
+    throneroom.AddFeature(&curtains);
+    chamber.AddFeature(&eggs);
+    belfry.AddFeature(&bats);
 
     // Create items
     Item pebble("Pebble", "A useless pebble");
     Potion smallPotion("Potion", "A bubbling red potion. It smells delicious.", 50);
     Potion healingCrystal("Crystal", "A shining crystal the size of your fist that gives off a warm healing feeling.", 100);
+    Key ornateKey("Key", "An ornate golden key that looks to be for an equally ornate lock.", &ornateLock);
+    Weapon masterSword("Sword", "A sword made of glittering diamond. It looks almost too big to lift, but is surprisingly light. Glows with a magical light.", 100);
+    Armor goldArmor("Armor", "This breastplate appears to be made of pure gold. But rather than be soft and easy to bend, it seems as hard as adamantine.", 100);
 
     entrance.AddItem(&pebble);
     hallway.AddItem(&smallPotion);
     chamber.AddItem(&healingCrystal);
+    chamber.AddItem(&ornateKey);
+    belfry.AddItem(&masterSword);
+    belfry.AddItem(&goldArmor);
 
     // Create the player
     std::cout << "Please name your character: " << std::endl;
@@ -164,6 +192,13 @@ int main()
             std::cin >> choice;
             myPlayer.UseItemFromInventory(choice);
         }
+        else if (choice == "equip")
+        {
+            std::cout << "What do you want to equip?" << std::endl << std::endl;
+
+            std::cin >> choice;
+            myPlayer.Equip(choice);
+        }
         else if (choice == "exit")
         {
             std::cout << "Thank you for playing!" << std::endl << std::endl;
@@ -179,6 +214,7 @@ int main()
             std::cout << "     attack" << std::endl;
             std::cout << "     take" << std::endl;
             std::cout << "     use" << std::endl;
+            std::cout << "     equip" << std::endl;
             std::cout << "     exit" << std::endl;
             std::cout << "     help" << std::endl;
 
@@ -194,7 +230,14 @@ int main()
         if (myPlayer.GetAlive() == false)
         {
             std::cout << "You have died. Game over." << std::endl << std::endl;
-            exit = false;
+            exit = true;
+        }
+
+
+        if (goblinKing.GetAlive() == false)
+        {
+            std::cout << "You have defeated the Goblin King - you win! Congratulations!" << std::endl << std::endl;
+            exit = true;
         }
     }
 

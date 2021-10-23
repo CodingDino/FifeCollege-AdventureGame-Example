@@ -14,7 +14,7 @@ Thing::~Thing()
 void Thing::Look()
 {
 	std::cout << "You look at " << name << "." << std::endl;
-	std::cout << description << std::endl;
+	std::cout << description << std::endl << std::endl;
 }
 
 std::string Thing::GetName()
